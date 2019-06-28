@@ -191,7 +191,10 @@ potentially very long time.
 
 # Security Considerations
 
-None
+An intermediary must trust the server to echo back the headers and body of the
+original request.  A malicious server could replay a different request to the
+intermediary, who would then send it to another server.  The response to this
+forged request would be interpreted as a response to the original request.
 
 # IANA Considerations
 

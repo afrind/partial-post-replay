@@ -97,11 +97,11 @@ shutdown is initiated.
 ## Intermediary Processing
 
 Intermediaries MUST track the number of body bytes forwarded to the server for
-any request that could be replayed by the server.  Whan an intermediary receives
+any request that could be replayed by the server.  When an intermediary receives
 a 3xx status code from the server, it stops forwarding any new HTTP data from
 the client to this server.  The intermediary does not forward the 3xx response
 to the client, but instead reconstructs the original HTTP request message from
-headers in the response beginning with the `Echo-` or `Psuedo-Echo` prefixes.
+headers in the response beginning with the `Echo-` or `Pseudo-Echo` prefixes.
 Alternatively, if the intermediary retained a copy of the request it MAY use
 that and discard the response headers.
 
@@ -152,14 +152,14 @@ with a 5xx response.
 # Existing Solutions
 
 There are several existing solutions to handling requests while draining
-trafficfrom a web server, but each has drawbacks that Partial POST Replay does
+traffic from a web server, but each has drawbacks that Partial POST Replay does
 not.
 
 ## Drain Timeout
 
 When servers stop accepting new connections, they often set a timeout during
 which existing requests can continue processing.  At the end of the timeout, the
-server will abort any unfinished requsts.  During this phase, the server is not
+server will abort any unfinished requests.  During this phase, the server is not
 operating at full capacity, and requests that exceed the timeout are still
 terminated with error.
 
@@ -170,13 +170,13 @@ requests will not be processed, and which can be safely retried by the client.
 There are two problems with this mechanism.
 
 First, the server cannot use this mechanism, to refuse requests with stream IDs
-lower than the highest stream ID it has already processed.  For example if the
+lower than the highest stream ID it has already processed.  For example, if the
 server has received a partial request on stream ID=3, but has already begun
 processing a request on stream ID=5, it cannot send a GOAWAY with a
 Last-Stream-ID lower than 5.  HTTP/2 does not have a status code that indicates
 an individual request is retryable
 
-Second, an intermediary can not seamlessly retry a POST request unless it has
+Second, an intermediary cannot seamlessly retry a POST request unless it has
 buffered the entire request body.  Buffering all request bodies presents an
 enormous scalability challenge.
 

@@ -1,0 +1,540 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" 
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
+<head profile="http://www.w3.org/2006/03/hcard http://dublincore.org/documents/2008/08/04/dc-html/">
+  <meta http-equiv="Content-Type" content="text/html; charset=us-ascii" />
+
+  <title>HTTP Partial Post Replay</title>
+
+  
+<style type="text/css">/*<![CDATA[*/
+
+body {
+  font: 16px "Helvetica Neue","Open Sans",Helvetica,Calibri,sans-serif;
+  color: #333;
+  font-size-adjust: 0.5;
+  line-height: 24px;
+  margin: 75px auto;
+  max-width: 624px;
+  padding: 0 5px;
+}
+
+.title, .filename, h1, h2, h3, h4, h5 {
+  font: 16px "Roboto Condensed","Helvetica Neue","Open Sans",Helvetica,Calibri,sans-serif;
+  font-size-adjust: 0.5;
+  font-weight: bold;
+  color: #333;
+  line-height: 100%;
+  margin: 1.2em 0 0.3em;
+}
+.title, #rfc\.title h1 { font-size: 32px; }
+h1, section h1, h2, section h2, section h3, nav h2 { font-size: 20px; }
+h3, section h4, h4, section h5 { font-size: 16px; }
+h1 a[href], h2 a[href], h3 a[href], h4 a[href] {
+  color: #333;
+}
+
+table {
+  margin-left: 0em;
+  border-collapse: collapse;
+}
+th {
+  text-align: left;
+  border-bottom: 2px solid #ddd;
+}
+td {
+  border-top: 1px solid #ddd;
+  vertical-align: top;
+}
+tr:nth-child(2n+1) > td,
+tr:nth-child(2n+1) > th {
+  background-color: #f9f9f9;
+}
+td.reference {
+  max-width: 200px;
+  border-top: none;
+  padding-right: 1em;
+}
+.right {
+  text-align: right;
+}
+
+
+table.header, table#rfc\.headerblock {
+  width: 100%;
+}
+table.header td, table#rfc\.headerblock td {
+  border: none;
+  background-color: transparent;
+  color: black;
+  padding: 0;
+}
+.filename {
+  display: block;
+  color: rgb(119, 119, 119);
+  font-size: 20px;
+  font-weight: normal;
+  line-height: 100%;
+  margin: 10px 0 32px;
+}
+#rfc\.abstract+p, #rfc\.abstract+p code, #rfc\.abstract+p samp, #rfc\.abstract+p tt {
+  font-size: 20px;
+  line-height: 28px;
+}
+
+samp, tt, code, pre, span.tt {
+  font-size: 13.5px;
+  font-family: Consolas, monospace;
+  font-size-adjust: none;
+}
+pre {
+  background-color: #eee;
+  border: 1px solid #ddd;
+  overflow-x: auto;
+  padding: 5px;
+  margin: 5px;
+}
+.figure, caption {
+  font-style: italic;
+  margin: 0 1.5em;
+  text-align: left;
+}
+
+address {
+  margin: 16px 2px;
+  line-height: 20px;
+}
+.vcard {
+  font-style: normal;
+}
+.vcardline {
+  display: block;
+}
+.vcardline .fn, address b {
+  font-weight: normal;
+}
+.vcardline .hidden {
+  display: none;
+}
+
+dl {
+  margin-left: 1em;
+}
+dl.dl-horizontal: {
+  margin-left: 0;
+}
+dl > dt {
+  float: left;
+  margin-right: 1em;
+}
+dl.nohang > dt {
+  float: none;
+}
+dl > dd {
+  margin-bottom: .5em;
+}
+dl.compact > dd {
+  margin-bottom: 0em;
+}
+dl > dd > dl {
+  margin-top: 0.5em;
+  margin-bottom: 0em;
+}
+ul.empty {
+  list-style-type: none;
+}
+ul.empty li {
+  margin-top: .5em;
+}
+
+hr {
+  border: 0;
+  border-top: 1px solid #eee;
+}
+hr.noprint {
+  display: none;
+}
+
+a {
+  text-decoration: none;
+}
+a[href] {
+  color: #2a6496;
+}
+a[href]:hover {
+  background-color: #eee;
+}
+
+p, ol, ul, li {
+  padding: 0;
+}
+p {
+  margin: 0.5em 0;
+}
+ol, ul {
+  margin: 0.2em 0 0.2em 2em;
+}
+li {
+  margin: 0.2em 0;
+}
+address {
+  font-style: normal;
+}
+
+ul.toc ul {
+  margin: 0 0 0 2em;
+}
+ul.toc li {
+  list-style: none;
+  margin: 0;
+}
+
+@media screen and (min-width: 924px) {
+  body {
+    padding-right: 350px;
+  }
+  body>ul.toc, body>#rfc\.toc {
+    position: fixed;
+    bottom: 0;
+    right: 0;
+    right: calc(50vw - 500px);
+    width: 300px;
+    z-index: 1;
+    overflow: auto;
+    overscroll-behavior: contain;
+  }
+  body>#rfc\.toc {
+    top: 55px;
+  }
+  body>ul.toc {
+    top: 100px;
+  }
+
+  ul.toc {
+    margin: 0 0 0 4px;
+    font-size: 12px;
+    line-height: 20px;
+  }
+  ul.toc ul {
+    margin-left: 1.2em;
+  }
+}
+
+.github-fork-ribbon-wrapper {
+  display: none;
+}
+@media screen and (min-width: 800px) {
+  /* "Fork me on GitHub" CSS ribbon based on
+   * https://github.com/simonwhitaker/github-fork-ribbon-css
+   */
+  .github-fork-ribbon {
+    position: absolute;
+    padding: 2px 0;
+    background-color: #a00;
+    background-image: linear-gradient(to bottom, rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.15));
+    box-shadow: 0 2px 3px 0 rgba(0, 0, 0, 0.5);
+    font: 700 12px "Helvetica Neue", Helvetica, Arial, sans-serif;
+
+    pointer-events: auto;
+
+    top: 38px;
+    right: -45px;
+
+    transform: rotate(45deg);
+  }
+
+  .github-fork-ribbon a[href],
+  .github-fork-ribbon a[href]:hover {
+    color: #fff;
+    background-color: transparent;
+    text-decoration: none;
+    text-shadow: 0 -1px rgba(0, 0, 0, 0.5);
+    text-align: center;
+
+    width: 190px;
+    line-height: 18px;
+
+    display: inline-block;
+    padding: 2px 0;
+
+    border: 1.5px dotted #fff;
+    border-color: rgba(255, 255, 255, 0.6);
+  }
+
+  .github-fork-ribbon-wrapper {
+    display: block;
+    width: 130px;
+    height: 130px;
+    position: absolute;
+    overflow: hidden;
+    top: 0; right: 0;
+    z-index: 2;
+    pointer-events: none;
+  }
+}
+@media screen and (min-width: 1000px) {
+  .github-fork-ribbon-wrapper {
+    position: fixed;
+  }
+  /*]]>*/</style>
+  <meta name="viewport" content="initial-scale=1.0">
+
+
+  <link href="#rfc.toc" rel="Contents">
+<link href="#rfc.section.1" rel="Chapter" title="1 Introduction">
+<link href="#rfc.section.1.1" rel="Chapter" title="1.1 Conventions and Definitions">
+<link href="#rfc.section.2" rel="Chapter" title="2 Partial Post Replay">
+<link href="#rfc.section.2.1" rel="Chapter" title="2.1 Response Message">
+<link href="#rfc.section.2.1.1" rel="Chapter" title="2.1.1 Response Headers">
+<link href="#rfc.section.2.2" rel="Chapter" title="2.2 Intermediary Processing">
+<link href="#rfc.section.2.3" rel="Chapter" title="2.3 Original Request Termination">
+<link href="#rfc.section.2.4" rel="Chapter" title="2.4 Preventing Loops">
+<link href="#rfc.section.3" rel="Chapter" title="3 Existing Solutions">
+<link href="#rfc.section.3.1" rel="Chapter" title="3.1 Drain Timeout">
+<link href="#rfc.section.3.2" rel="Chapter" title="3.2 GOAWAY">
+<link href="#rfc.section.3.3" rel="Chapter" title="3.3 State Handover">
+<link href="#rfc.section.4" rel="Chapter" title="4 Security Considerations">
+<link href="#rfc.section.5" rel="Chapter" title="5 IANA Considerations">
+<link href="#rfc.references" rel="Chapter" title="6 References">
+<link href="#rfc.references.1" rel="Chapter" title="6.1 Normative References">
+<link href="#rfc.references.2" rel="Chapter" title="6.2 Informative References">
+<link href="#rfc.acknowledgments" rel="Chapter">
+<link href="#rfc.authors" rel="Chapter">
+
+
+  <meta name="generator" content="xml2rfc version 2.9.2 - https://tools.ietf.org/tools/xml2rfc" />
+  <link rel="schema.dct" href="http://purl.org/dc/terms/" />
+
+  <meta name="dct.creator" content="Frindell, A." />
+  <meta name="dct.identifier" content="urn:ietf:id:draft-frindell-httpbis-partial-post-replay-latest" />
+  <meta name="dct.issued" scheme="ISO8601" content="2019-06-28" />
+  <meta name="dct.abstract" content="This memo introduces a method of exchanging HTTP " />
+  <meta name="description" content="This memo introduces a method of exchanging HTTP " />
+
+</head>
+
+<body>
+
+  <table class="header">
+    <tbody>
+    
+    	<tr>
+<td class="left">httpbis Working Group</td>
+<td class="right">A. Frindell</td>
+</tr>
+<tr>
+<td class="left">Internet-Draft</td>
+<td class="right">Facebook</td>
+</tr>
+<tr>
+<td class="left">Intended status: Informational</td>
+<td class="right">June 28, 2019</td>
+</tr>
+<tr>
+<td class="left">Expires: December 30, 2019</td>
+<td class="right"></td>
+</tr>
+
+    	
+    </tbody>
+  </table>
+
+  <p class="title">HTTP Partial Post Replay<br />
+  <span class="filename">draft-frindell-httpbis-partial-post-replay-latest</span></p>
+  
+  <h1 id="rfc.abstract"><a href="#rfc.abstract">Abstract</a></h1>
+<p>This memo introduces a method of exchanging HTTP <a href="#RFC7230" class="xref">[RFC7230]</a> messages between a web server and a cooperating intermediary &#8211; such as a reverse proxy load balancer &#8211; that enables faster restarts for the web server with minimal disruption for users.</p>
+<h1 id="rfc.status"><a href="#rfc.status">Status of This Memo</a></h1>
+<p>This Internet-Draft is submitted in full conformance with the provisions of BCP 78 and BCP 79.</p>
+<p>Internet-Drafts are working documents of the Internet Engineering Task Force (IETF).  Note that other groups may also distribute working documents as Internet-Drafts.  The list of current Internet-Drafts is at https://datatracker.ietf.org/drafts/current/.</p>
+<p>Internet-Drafts are draft documents valid for a maximum of six months and may be updated, replaced, or obsoleted by other documents at any time.  It is inappropriate to use Internet-Drafts as reference material or to cite them other than as "work in progress."</p>
+<p>This Internet-Draft will expire on December 30, 2019.</p>
+<h1 id="rfc.copyrightnotice"><a href="#rfc.copyrightnotice">Copyright Notice</a></h1>
+<p>Copyright (c) 2019 IETF Trust and the persons identified as the document authors.  All rights reserved.</p>
+<p>This document is subject to BCP 78 and the IETF Trust's Legal Provisions Relating to IETF Documents (https://trustee.ietf.org/license-info) in effect on the date of publication of this document.  Please review these documents carefully, as they describe your rights and restrictions with respect to this document.  Code Components extracted from this document must include Simplified BSD License text as described in Section 4.e of the Trust Legal Provisions and are provided without warranty as described in the Simplified BSD License.</p>
+<h1 id="rfc.section.1">
+<a href="#rfc.section.1">1.</a> <a href="#introduction" id="introduction">Introduction</a>
+</h1>
+<p id="rfc.section.1.p.1">Web servers need to drain traffic periodically for configuration changes, software updates and maintenance.  As continuous deployment becomes more common, the frequency of such events increases.  When a server shuts down, it chooses whether to let all existing requests run to completion, or abort some or all in-progress requests.</p>
+<h1 id="rfc.section.1.1">
+<a href="#rfc.section.1.1">1.1.</a> <a href="#conventions-and-definitions" id="conventions-and-definitions">Conventions and Definitions</a>
+</h1>
+<p id="rfc.section.1.1.p.1">The key words &#8220;MUST&#8221;, &#8220;MUST NOT&#8221;, &#8220;REQUIRED&#8221;, &#8220;SHALL&#8221;, &#8220;SHALL NOT&#8221;, &#8220;SHOULD&#8221;, &#8220;SHOULD NOT&#8221;, &#8220;RECOMMENDED&#8221;, &#8220;NOT RECOMMENDED&#8221;, &#8220;MAY&#8221;, and &#8220;OPTIONAL&#8221; in this document are to be interpreted as described in BCP 14 <a href="#RFC2119" class="xref">[RFC2119]</a> <a href="#RFC8174" class="xref">[RFC8174]</a> when, and only when, they appear in all capitals, as shown here.</p>
+<h1 id="rfc.section.2">
+<a href="#rfc.section.2">2.</a> <a href="#partial-post-replay" id="partial-post-replay">Partial Post Replay</a>
+</h1>
+<p id="rfc.section.2.p.1">Partial post replay is a mechanism a draining or restarting server can use in conjunction with a cooperating intermediary to hand-off partially transferred entity bodies to another server instance.</p>
+<h1 id="rfc.section.2.1">
+<a href="#rfc.section.2.1">2.1.</a> <a href="#response-message" id="response-message">Response Message</a>
+</h1>
+<p id="rfc.section.2.1.p.1">When the server begins restarting, it responds to any unprocessed requests with incomplete entity bodies with a new 3xx status code (TBD).  The HTTP/1.1 status message is Partial POST Replay.  Once this status is sent the server MUST NOT process this request other than is specified in this document.</p>
+<h1 id="rfc.section.2.1.1">
+<a href="#rfc.section.2.1.1">2.1.1.</a> <a href="#response-headers" id="response-headers">Response Headers</a>
+</h1>
+<p id="rfc.section.2.1.1.p.1">Each request header is echoed in the response message with the prefix <samp>Echo-</samp>.  For example, the <samp>User-Agent: Foo</samp> request header would be included in the response as <samp>Echo-User-Agent: Foo</samp>.  HTTP/2 <a href="#RFC7540" class="xref">[RFC7540]</a> and HTTP/3 {{?HTTP3} request pseudo-headers (beginning with &#8216;:&#8217;) are echoed in the response message with the prefix <samp>Pseudo-Echo-</samp>, and with the &#8216;:&#8217; removed.  For example, <samp>:path: /</samp> is echoed as <samp>pseudo-echo-path: /</samp>.  The server MUST NOT insert any Echo- or Pseudo-Echo headers in the response if the corresponding header was not present in the request.</p>
+<p id="rfc.section.2.1.1.p.2">Because there might be request body bytes in flight to the server when the 3xx response is generated, the length of the response body is unknown.  The response SHOULD NOT include a <samp>Content-Length</samp> header (but will include a <samp>Echo-Content-Length</samp> header, if the request contained <samp>Content-Length</samp>).  If the request protocol is HTTP/1.1, the server SHOULD use chunked transfer encoding for the response.</p>
+<p id="rfc.section.2.1.1.p.3">HTTP/1.1 server SHOULD include a Connection: close header in the response to prevent the intermediary from reusing the connection for a new request.  HTTP/2 and HTTP/3 servers SHOULD emit a GOAWAY frame on each open connection when shutdown is initiated.</p>
+<h1 id="rfc.section.2.2">
+<a href="#rfc.section.2.2">2.2.</a> <a href="#intermediary-processing" id="intermediary-processing">Intermediary Processing</a>
+</h1>
+<p id="rfc.section.2.2.p.1">Intermediaries MUST track the number of body bytes forwarded to the server for any request that could be replayed by the server.  Whan an intermediary receives a 3xx status code from the server, it stops forwarding any new HTTP data from the client to this server.  The intermediary does not forward the 3xx response to the client, but instead reconstructs the original HTTP request message from headers in the response beginning with the <samp>Echo-</samp> or <samp>Psuedo-Echo</samp> prefixes.  Alternatively, if the intermediary retained a copy of the request it MAY use that and discard the response headers.</p>
+<p id="rfc.section.2.2.p.2">The intermediary can choose to buffer the response before selecting a new server, or can immediately select a new server and begin forwarding the request there.  When the entire replayed request body has been sent to the new server, the intermediary can begin forwarding new HTTP data from the client to the new server.</p>
+<p id="rfc.section.2.2.p.3">If the intermediary receives more body bytes from the server than it forwarded, or if the response is terminated before receiving all forwarded bytes, the intermediary MUST fail the request with a 5xx status.</p>
+<h1 id="rfc.section.2.3">
+<a href="#rfc.section.2.3">2.3.</a> <a href="#original-request-termination" id="original-request-termination">Original Request Termination</a>
+</h1>
+<p id="rfc.section.2.3.p.1">When the intermediary has received in the response body all of the request bytes forwarded to the original server, it completes the request message to the original server, according to the semantics of the transport protocol:</p>
+<p></p>
+
+<ul>
+<li>For HTTP/1.0, the intermediary half-closes the connection</li>
+<li>For HTTP/1.1, the intermediary sends the final chunk terminator, or half-closes the connection if the request did not use chunked transfer encoding.</li>
+<li>For HTTP/2, the intermediary sends a DATA frame with the END_STREAM flag set on the request stream</li>
+<li>For HTTP/3, the intermediary sends a FIN on the request stream</li>
+</ul>
+<p id="rfc.section.2.3.p.3">When the server processes the end of the request, it completes the response message according to the semantics of the transport protocol.</p>
+<p id="rfc.section.2.3.p.4">Note that some HTTP server implementations treat the termination of the request with fewer bytes than specified in the Content-Length header as an error.  Because all required information has been transferred to the intermediary before this error occurs, the server can abort the response and ignore the error without impacting the final status of the request.</p>
+<p id="rfc.section.2.3.p.5">It is possible that the entire entity body was sent by the intermediary before it received the Partial POST Replay status message.  In this case the intermediary will receive the entire entity body in the response.</p>
+<h1 id="rfc.section.2.4">
+<a href="#rfc.section.2.4">2.4.</a> <a href="#preventing-loops" id="preventing-loops">Preventing Loops</a>
+</h1>
+<p id="rfc.section.2.4.p.1">To prevent the intermediary from becoming stuck in an infinite redirect loop, it SHOULD add a &#8216;Partial-Post-Replay: 1&#8217; header whenever forwarding to a new server.  An intermediary that receives a redirect response with more <samp>Echo-Partial-Post-Replay</samp> headers than it supports SHOULD fail original request with a 5xx response.</p>
+<h1 id="rfc.section.3">
+<a href="#rfc.section.3">3.</a> <a href="#existing-solutions" id="existing-solutions">Existing Solutions</a>
+</h1>
+<p id="rfc.section.3.p.1">There are several existing solutions to handling requests while draining trafficfrom a web server, but each has drawbacks that Partial POST Replay does not.</p>
+<h1 id="rfc.section.3.1">
+<a href="#rfc.section.3.1">3.1.</a> <a href="#drain-timeout" id="drain-timeout">Drain Timeout</a>
+</h1>
+<p id="rfc.section.3.1.p.1">When servers stop accepting new connections, they often set a timeout during which existing requests can continue processing.  At the end of the timeout, the server will abort any unfinished requsts.  During this phase, the server is not operating at full capacity, and requests that exceed the timeout are still terminated with error.</p>
+<h1 id="rfc.section.3.2">
+<a href="#rfc.section.3.2">3.2.</a> <a href="#goaway" id="goaway">GOAWAY</a>
+</h1>
+<p id="rfc.section.3.2.p.1">HTTP/2 introduced the GOAWAY frame which a server can use to indicate which requests will not be processed, and which can be safely retried by the client.  There are two problems with this mechanism.</p>
+<p id="rfc.section.3.2.p.2">First, the server cannot use this mechanism, to refuse requests with stream IDs lower than the highest stream ID it has already processed.  For example if the server has received a partial request on stream ID=3, but has already begun processing a request on stream ID=5, it cannot send a GOAWAY with a Last-Stream-ID lower than 5.  HTTP/2 does not have a status code that indicates an individual request is retryable</p>
+<p id="rfc.section.3.2.p.3">Second, an intermediary can not seamlessly retry a POST request unless it has buffered the entire request body.  Buffering all request bodies presents an enormous scalability challenge.</p>
+<h1 id="rfc.section.3.3">
+<a href="#rfc.section.3.3">3.3.</a> <a href="#state-handover" id="state-handover">State Handover</a>
+</h1>
+<p id="rfc.section.3.3.p.1">Another possible technique is to pass state from a draining web server to a new instance.  Such deployments start a new instance to handle new work in parallel with the instance that is shutting down.  This requires that the system have enough resources to run two instances of the server simultaneously, for a potentially very long time.</p>
+<h1 id="rfc.section.4">
+<a href="#rfc.section.4">4.</a> <a href="#security-considerations" id="security-considerations">Security Considerations</a>
+</h1>
+<p id="rfc.section.4.p.1">An intermediary must trust the server to echo back the headers and body of the original request.  A malicious server could replay a different request to the intermediary, who would then send it to another server.  The response to this forged request would be interpreted as a response to the original request.</p>
+<h1 id="rfc.section.5">
+<a href="#rfc.section.5">5.</a> <a href="#iana-considerations" id="iana-considerations">IANA Considerations</a>
+</h1>
+<p id="rfc.section.5.p.1">This document has no IANA actions.</p>
+<h1 id="rfc.references">
+<a href="#rfc.references">6.</a> References</h1>
+<h1 id="rfc.references.1">
+<a href="#rfc.references.1">6.1.</a> Normative References</h1>
+<table><tbody>
+<tr>
+<td class="reference"><b id="RFC2119">[RFC2119]</b></td>
+<td class="top">
+<a>Bradner, S.</a>, "<a href="https://tools.ietf.org/html/rfc2119">Key words for use in RFCs to Indicate Requirement Levels</a>", BCP 14, RFC 2119, DOI 10.17487/RFC2119, March 1997.</td>
+</tr>
+<tr>
+<td class="reference"><b id="RFC8174">[RFC8174]</b></td>
+<td class="top">
+<a>Leiba, B.</a>, "<a href="https://tools.ietf.org/html/rfc8174">Ambiguity of Uppercase vs Lowercase in RFC 2119 Key Words</a>", BCP 14, RFC 8174, DOI 10.17487/RFC8174, May 2017.</td>
+</tr>
+</tbody></table>
+<h1 id="rfc.references.2">
+<a href="#rfc.references.2">6.2.</a> Informative References</h1>
+<table><tbody>
+<tr>
+<td class="reference"><b id="HTTP3">[HTTP3]</b></td>
+<td class="top">
+<a title="Akamai Technologies">Bishop, M.</a>, "<a href="https://tools.ietf.org/html/draft-ietf-quic-http-latest">Hypertext Transfer Protocol Version 3 (HTTP/3)</a>", Internet-Draft draft-ietf-quic-http-latest</td>
+</tr>
+<tr>
+<td class="reference"><b id="RFC7230">[RFC7230]</b></td>
+<td class="top">
+<a>Fielding, R.</a> and <a>J. Reschke</a>, "<a href="https://tools.ietf.org/html/rfc7230">Hypertext Transfer Protocol (HTTP/1.1): Message Syntax and Routing</a>", RFC 7230, DOI 10.17487/RFC7230, June 2014.</td>
+</tr>
+<tr>
+<td class="reference"><b id="RFC7540">[RFC7540]</b></td>
+<td class="top">
+<a>Belshe, M.</a>, <a>Peon, R.</a> and <a>M. Thomson</a>, "<a href="https://tools.ietf.org/html/rfc7540">Hypertext Transfer Protocol Version 2 (HTTP/2)</a>", RFC 7540, DOI 10.17487/RFC7540, May 2015.</td>
+</tr>
+</tbody></table>
+<h1 id="rfc.acknowledgments"><a href="#rfc.acknowledgments">Acknowledgments</a></h1>
+<p id="rfc.section.A.p.1">This draft evolved from a feature developed at Facebook.  Thanks to Mohammad Husain, Woo Xie and David Langevin who worked on the initial implementation and deployment of this feature.</p>
+<h1 id="rfc.authors"><a href="#rfc.authors">Author's Address</a></h1>
+<div class="avoidbreak">
+  <address class="vcard">
+	<span class="vcardline">
+	  <span class="fn">Alan Frindell</span> 
+	  <span class="n hidden">
+		<span class="family-name">Frindell</span>
+	  </span>
+	</span>
+	<span class="org vcardline">Facebook</span>
+	<span class="adr">
+	  
+	  <span class="vcardline">
+		<span class="locality"></span> 
+		<span class="region"></span>
+		<span class="code"></span>
+	  </span>
+	  <span class="country-name vcardline"></span>
+	</span>
+	<span class="vcardline">EMail: <a href="mailto:afrind@fb.com">afrind@fb.com</a></span>
+
+  </address>
+</div>
+  
+  <hr class="noprint" />
+  <h1 class="np" id="rfc.toc"><a href="#rfc.toc">Table of Contents</a></h1>
+  <ul class="toc">
+
+  	<li>1.   <a href="#rfc.section.1">Introduction</a>
+</li>
+<ul><li>1.1.   <a href="#rfc.section.1.1">Conventions and Definitions</a>
+</li>
+</ul><li>2.   <a href="#rfc.section.2">Partial Post Replay</a>
+</li>
+<ul><li>2.1.   <a href="#rfc.section.2.1">Response Message</a>
+</li>
+<ul><li>2.1.1.   <a href="#rfc.section.2.1.1">Response Headers</a>
+</li>
+</ul><li>2.2.   <a href="#rfc.section.2.2">Intermediary Processing</a>
+</li>
+<li>2.3.   <a href="#rfc.section.2.3">Original Request Termination</a>
+</li>
+<li>2.4.   <a href="#rfc.section.2.4">Preventing Loops</a>
+</li>
+</ul><li>3.   <a href="#rfc.section.3">Existing Solutions</a>
+</li>
+<ul><li>3.1.   <a href="#rfc.section.3.1">Drain Timeout</a>
+</li>
+<li>3.2.   <a href="#rfc.section.3.2">GOAWAY</a>
+</li>
+<li>3.3.   <a href="#rfc.section.3.3">State Handover</a>
+</li>
+</ul><li>4.   <a href="#rfc.section.4">Security Considerations</a>
+</li>
+<li>5.   <a href="#rfc.section.5">IANA Considerations</a>
+</li>
+<li>6.   <a href="#rfc.references">References</a>
+</li>
+<ul><li>6.1.   <a href="#rfc.references.1">Normative References</a>
+</li>
+<li>6.2.   <a href="#rfc.references.2">Informative References</a>
+</li>
+</ul><li><a href="#rfc.acknowledgments">Acknowledgments</a>
+</li>
+<li><a href="#rfc.authors">Author's Address</a>
+</li>
+
+
+  </ul>
+
+  
+
+</body>
+</html>
+

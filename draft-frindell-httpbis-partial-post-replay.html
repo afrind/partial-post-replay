@@ -5,7 +5,7 @@
 <head profile="http://www.w3.org/2006/03/hcard http://dublincore.org/documents/2008/08/04/dc-html/">
   <meta http-equiv="Content-Type" content="text/html; charset=us-ascii" />
 
-  <title>HTTP Partial Post Replay</title>
+  <title>HTTP Partial POST Replay</title>
 
   
 <style type="text/css">/*<![CDATA[*/
@@ -284,7 +284,7 @@ ul.toc li {
   <link href="#rfc.toc" rel="Contents">
 <link href="#rfc.section.1" rel="Chapter" title="1 Introduction">
 <link href="#rfc.section.1.1" rel="Chapter" title="1.1 Conventions and Definitions">
-<link href="#rfc.section.2" rel="Chapter" title="2 Partial Post Replay">
+<link href="#rfc.section.2" rel="Chapter" title="2 Partial POST Replay">
 <link href="#rfc.section.2.1" rel="Chapter" title="2.1 Response Message">
 <link href="#rfc.section.2.1.1" rel="Chapter" title="2.1.1 Response Headers">
 <link href="#rfc.section.2.2" rel="Chapter" title="2.2 Intermediary Processing">
@@ -340,7 +340,7 @@ ul.toc li {
     </tbody>
   </table>
 
-  <p class="title">HTTP Partial Post Replay<br />
+  <p class="title">HTTP Partial POST Replay<br />
   <span class="filename">draft-frindell-httpbis-partial-post-replay-latest</span></p>
   
   <h1 id="rfc.abstract"><a href="#rfc.abstract">Abstract</a></h1>
@@ -356,25 +356,26 @@ ul.toc li {
 <h1 id="rfc.section.1">
 <a href="#rfc.section.1">1.</a> <a href="#introduction" id="introduction">Introduction</a>
 </h1>
-<p id="rfc.section.1.p.1">Web servers need to drain traffic periodically for configuration changes, software updates and maintenance.  As continuous deployment becomes more common, the frequency of such events increases.  When a server shuts down, it chooses whether to let all existing requests run to completion, or abort some or all in-progress requests.</p>
+<p id="rfc.section.1.p.1">Web servers need to drain traffic periodically for configuration changes, software updates and maintenance.  As continuous deployment becomes more common, the frequency of such events increases.  When a server shuts down, it chooses whether to let all existing requests run to completion, or abort some or all in-progress requests.  Aborted requests lead to poor user experiences including error messages or additional latency while the request is resent.  Partial POST Replay makes it possible to eliminate this class of errors by handing off in-process requests to another server within a deployment.</p>
 <h1 id="rfc.section.1.1">
 <a href="#rfc.section.1.1">1.1.</a> <a href="#conventions-and-definitions" id="conventions-and-definitions">Conventions and Definitions</a>
 </h1>
 <p id="rfc.section.1.1.p.1">The key words &#8220;MUST&#8221;, &#8220;MUST NOT&#8221;, &#8220;REQUIRED&#8221;, &#8220;SHALL&#8221;, &#8220;SHALL NOT&#8221;, &#8220;SHOULD&#8221;, &#8220;SHOULD NOT&#8221;, &#8220;RECOMMENDED&#8221;, &#8220;NOT RECOMMENDED&#8221;, &#8220;MAY&#8221;, and &#8220;OPTIONAL&#8221; in this document are to be interpreted as described in BCP 14 <a href="#RFC2119" class="xref">[RFC2119]</a> <a href="#RFC8174" class="xref">[RFC8174]</a> when, and only when, they appear in all capitals, as shown here.</p>
 <h1 id="rfc.section.2">
-<a href="#rfc.section.2">2.</a> <a href="#partial-post-replay" id="partial-post-replay">Partial Post Replay</a>
+<a href="#rfc.section.2">2.</a> <a href="#partial-post-replay" id="partial-post-replay">Partial POST Replay</a>
 </h1>
-<p id="rfc.section.2.p.1">Partial post replay is a mechanism a draining or restarting server can use in conjunction with a cooperating intermediary to hand-off partially transferred entity bodies to another server instance.</p>
+<p id="rfc.section.2.p.1">This section describes the Partial POST Replay mechanism for handing off a request with a partially transferred entity body to another server instance.</p>
 <h1 id="rfc.section.2.1">
 <a href="#rfc.section.2.1">2.1.</a> <a href="#response-message" id="response-message">Response Message</a>
 </h1>
 <p id="rfc.section.2.1.p.1">When the server begins restarting, it responds to any unprocessed requests with incomplete entity bodies with a new 3xx status code (TBD).  The HTTP/1.1 status message is Partial POST Replay.  Once this status is sent the server MUST NOT process this request other than is specified in this document.</p>
+<p id="rfc.section.2.1.p.2">The server MUST have prior knowledge that the intermediary supports Partial POST Replay before sending the 3xx response.  If a server sends this response to an intermediary that does not understand it, the response will likely be forwarded back to the client.</p>
 <h1 id="rfc.section.2.1.1">
 <a href="#rfc.section.2.1.1">2.1.1.</a> <a href="#response-headers" id="response-headers">Response Headers</a>
 </h1>
 <p id="rfc.section.2.1.1.p.1">Each request header is echoed in the response message with the prefix <samp>Echo-</samp>.  For example, the <samp>User-Agent: Foo</samp> request header would be included in the response as <samp>Echo-User-Agent: Foo</samp>.  HTTP/2 <a href="#RFC7540" class="xref">[RFC7540]</a> and HTTP/3 {{?HTTP3} request pseudo-headers (beginning with &#8216;:&#8217;) are echoed in the response message with the prefix <samp>Pseudo-Echo-</samp>, and with the &#8216;:&#8217; removed.  For example, <samp>:path: /</samp> is echoed as <samp>pseudo-echo-path: /</samp>.  The server MUST NOT insert any Echo- or Pseudo-Echo headers in the response if the corresponding header was not present in the request.</p>
 <p id="rfc.section.2.1.1.p.2">Because there might be request body bytes in flight to the server when the 3xx response is generated, the length of the response body is unknown.  The response SHOULD NOT include a <samp>Content-Length</samp> header (but will include a <samp>Echo-Content-Length</samp> header, if the request contained <samp>Content-Length</samp>).  If the request protocol is HTTP/1.1, the server SHOULD use chunked transfer encoding for the response.</p>
-<p id="rfc.section.2.1.1.p.3">HTTP/1.1 server SHOULD include a Connection: close header in the response to prevent the intermediary from reusing the connection for a new request.  HTTP/2 and HTTP/3 servers SHOULD emit a GOAWAY frame on each open connection when shutdown is initiated.</p>
+<p id="rfc.section.2.1.1.p.3">HTTP/1.1 server SHOULD include a <samp>Connection: close</samp> header in the response to prevent the intermediary from reusing the connection for a new request.  HTTP/2 and HTTP/3 servers SHOULD emit a GOAWAY frame on each open connection when shutdown is initiated.</p>
 <h1 id="rfc.section.2.2">
 <a href="#rfc.section.2.2">2.2.</a> <a href="#intermediary-processing" id="intermediary-processing">Intermediary Processing</a>
 </h1>
@@ -412,8 +413,8 @@ ul.toc li {
 <a href="#rfc.section.3.2">3.2.</a> <a href="#goaway" id="goaway">GOAWAY</a>
 </h1>
 <p id="rfc.section.3.2.p.1">HTTP/2 introduced the GOAWAY frame which a server can use to indicate which requests will not be processed, and which can be safely retried by the client.  There are two problems with this mechanism.</p>
-<p id="rfc.section.3.2.p.2">First, the server cannot use this mechanism, to refuse requests with stream IDs lower than the highest stream ID it has already processed.  For example, if the server has received a partial request on stream ID=3, but has already begun processing a request on stream ID=5, it cannot send a GOAWAY with a Last-Stream-ID lower than 5.  HTTP/2 does not have a status code that indicates an individual request is retryable</p>
-<p id="rfc.section.3.2.p.3">Second, an intermediary cannot seamlessly retry a POST request unless it has buffered the entire request body.  Buffering all request bodies presents an enormous scalability challenge.</p>
+<p id="rfc.section.3.2.p.2">First, the server cannot use this mechanism to refuse requests with stream IDs lower than the highest stream ID it has already processed.  For example, if the server has received a partial request on stream ID=3, but has already begun processing a request on stream ID=5, it cannot send a GOAWAY with a Last-Stream-ID lower than 5.  HTTP/2 does not have a status code that indicates an individual request is retryable</p>
+<p id="rfc.section.3.2.p.3">Second, an intermediary cannot seamlessly retry a POST request unless it has buffered the entire request body.  Buffering all request bodies presents an enormous scalability challenge for intermediaries.</p>
 <h1 id="rfc.section.3.3">
 <a href="#rfc.section.3.3">3.3.</a> <a href="#state-handover" id="state-handover">State Handover</a>
 </h1>
@@ -495,7 +496,7 @@ ul.toc li {
 </li>
 <ul><li>1.1.   <a href="#rfc.section.1.1">Conventions and Definitions</a>
 </li>
-</ul><li>2.   <a href="#rfc.section.2">Partial Post Replay</a>
+</ul><li>2.   <a href="#rfc.section.2">Partial POST Replay</a>
 </li>
 <ul><li>2.1.   <a href="#rfc.section.2.1">Response Message</a>
 </li>

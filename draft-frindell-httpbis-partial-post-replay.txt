@@ -125,12 +125,12 @@ Internet-Draft                  HTTP-PPR                       June 2019
 2.2.  Intermediary Processing
 
    Intermediaries MUST track the number of body bytes forwarded to the
-   server for any request that could be replayed by the server.  Whan an
+   server for any request that could be replayed by the server.  When an
    intermediary receives a 3xx status code from the server, it stops
    forwarding any new HTTP data from the client to this server.  The
    intermediary does not forward the 3xx response to the client, but
    instead reconstructs the original HTTP request message from headers
-   in the response beginning with the "Echo-" or "Psuedo-Echo" prefixes.
+   in the response beginning with the "Echo-" or "Pseudo-Echo" prefixes.
    Alternatively, if the intermediary retained a copy of the request it
    MAY use that and discard the response headers.
 
@@ -197,15 +197,15 @@ Internet-Draft                  HTTP-PPR                       June 2019
 3.  Existing Solutions
 
    There are several existing solutions to handling requests while
-   draining trafficfrom a web server, but each has drawbacks that
+   draining traffic from a web server, but each has drawbacks that
    Partial POST Replay does not.
 
 3.1.  Drain Timeout
 
    When servers stop accepting new connections, they often set a timeout
    during which existing requests can continue processing.  At the end
-   of the timeout, the server will abort any unfinished requsts.  During
-   this phase, the server is not operating at full capacity, and
+   of the timeout, the server will abort any unfinished requests.
+   During this phase, the server is not operating at full capacity, and
    requests that exceed the timeout are still terminated with error.
 
 3.2.  GOAWAY
@@ -216,7 +216,7 @@ Internet-Draft                  HTTP-PPR                       June 2019
 
    First, the server cannot use this mechanism, to refuse requests with
    stream IDs lower than the highest stream ID it has already processed.
-   For example if the server has received a partial request on stream
+   For example, if the server has received a partial request on stream
    ID=3, but has already begun processing a request on stream ID=5, it
 
 
@@ -230,9 +230,9 @@ Internet-Draft                  HTTP-PPR                       June 2019
    not have a status code that indicates an individual request is
    retryable
 
-   Second, an intermediary can not seamlessly retry a POST request
-   unless it has buffered the entire request body.  Buffering all
-   request bodies presents an enormous scalability challenge.
+   Second, an intermediary cannot seamlessly retry a POST request unless
+   it has buffered the entire request body.  Buffering all request
+   bodies presents an enormous scalability challenge.
 
 3.3.  State Handover
 

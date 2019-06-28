@@ -3,6 +3,7 @@ title: HTTP Partial POST Replay
 abbrev: HTTP-PPR
 docname: draft-frindell-httpbis-partial-post-replay-latest
 category: info
+ipr: trust200902
 
 workgroup: httpbis Working Group
 keyword: Internet-Draft

@@ -1,5 +1,5 @@
 ---
-title: HTTP Partial Post Replay
+title: HTTP Partial POST Replay
 abbrev: HTTP-PPR
 docname: draft-frindell-httpbis-partial-post-replay-latest
 category: info
@@ -47,7 +47,10 @@ Web servers need to drain traffic periodically for configuration changes,
 software updates and maintenance.  As continuous deployment becomes more common,
 the frequency of such events increases.  When a server shuts down, it chooses
 whether to let all existing requests run to completion, or abort some or all
-in-progress requests.
+in-progress requests.  Aborted requests lead to poor user experiences including
+error messages or additional latency while the request is resent.  Partial POST
+Replay makes it possible to eliminate this class of errors by handing off
+in-process requests to another server within a deployment.
 
 
 ## Conventions and Definitions
@@ -58,11 +61,10 @@ document are to be interpreted as described in BCP 14 {{RFC2119}} {{!RFC8174}}
 when, and only when, they appear in all capitals, as shown here.
 
 
-# Partial Post Replay
+# Partial POST Replay
 
-Partial post replay is a mechanism a draining or restarting server can use in
-conjunction with a cooperating intermediary to hand-off partially transferred
-entity bodies to another server instance.
+This section describes the Partial POST Replay mechanism for handing off a
+request with a partially transferred entity body to another server instance.
 
 ## Response Message
 
@@ -70,6 +72,11 @@ When the server begins restarting, it responds to any unprocessed requests with
 incomplete entity bodies with a new 3xx status code (TBD).  The HTTP/1.1 status
 message is Partial POST Replay.  Once this status is sent the server MUST NOT
 process this request other than is specified in this document.
+
+The server MUST have prior knowledge that the intermediary supports Partial
+POST Replay before sending the 3xx response.  If a server sends this response
+to an intermediary that does not understand it, the response will likely be
+forwarded back to the client.
 
 ### Response Headers
 
@@ -89,7 +96,7 @@ SHOULD NOT include a `Content-Length` header (but will include a
 the request protocol is HTTP/1.1, the server SHOULD use chunked transfer
 encoding for the response.
 
-HTTP/1.1 server SHOULD include a Connection: close header in the response to
+HTTP/1.1 server SHOULD include a `Connection: close` header in the response to
 prevent the intermediary from reusing the connection for a new request.  HTTP/2
 and HTTP/3 servers SHOULD emit a GOAWAY frame on each open connection when
 shutdown is initiated.
@@ -169,7 +176,7 @@ HTTP/2 introduced the GOAWAY frame which a server can use to indicate which
 requests will not be processed, and which can be safely retried by the client.
 There are two problems with this mechanism.
 
-First, the server cannot use this mechanism, to refuse requests with stream IDs
+First, the server cannot use this mechanism to refuse requests with stream IDs
 lower than the highest stream ID it has already processed.  For example, if the
 server has received a partial request on stream ID=3, but has already begun
 processing a request on stream ID=5, it cannot send a GOAWAY with a
@@ -178,7 +185,7 @@ an individual request is retryable
 
 Second, an intermediary cannot seamlessly retry a POST request unless it has
 buffered the entire request body.  Buffering all request bodies presents an
-enormous scalability challenge.
+enormous scalability challenge for intermediaries.
 
 ## State Handover
 

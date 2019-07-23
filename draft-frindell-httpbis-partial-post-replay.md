@@ -71,7 +71,7 @@ request with a partially transferred entity body to another server instance.
 
 When the server begins restarting, it responds to any unprocessed requests with
 incomplete entity bodies with a new 3xx status code (TBD).  The HTTP/1.1 status
-message is Partial POST Replay.  Once this status is sent the server MUST NOT
+message is `Partial POST Replay`.  Once this status is sent the server MUST NOT
 process this request other than is specified in this document.
 
 The server MUST have prior knowledge that the intermediary supports Partial
